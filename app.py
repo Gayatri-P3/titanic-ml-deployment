@@ -6,13 +6,11 @@ import pickle
 app = Flask(__name__)
 
 # LOAD MODEL FILES
-
 model = pickle.load(open("model.pkl", "rb"))
 scaler = pickle.load(open("scaler.pkl", "rb"))
 columns = pickle.load(open("columns.pkl", "rb"))
 
-# SIMPLE HTML UI (INLINE)
-
+# HTML TEMPLATE
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
@@ -53,48 +51,13 @@ HTML_TEMPLATE = """
 </html>
 """
 
-# HOME PAGE (UI)
-@app.route("/")
-def home():
-    return render_template_string(HTML_TEMPLATE)
-
-# HTML FORM PREDICTION
-
-@app.route("/predict", methods=["POST"])
-def predict_html():
-
-    try:
-        data = {
-            "Pclass": int(request.form["Pclass"]),
-            "Sex": request.form["Sex"],
-            "Age": float(request.form["Age"]),
-            "SibSp": int(request.form["SibSp"]),
-            "Parch": int(request.form["Parch"]),
-            "Fare": float(request.form["Fare"]),
-            "Embarked": request.form["Embarked"]
-        }
-
-        df = pd.DataFrame([data])
-        df = pd.get_dummies(df)
-        df = df.reindex(columns=columns, fill_value=0)
-
-        df_scaled = scaler.transform(df)
-        prediction = model.predict(df_scaled)[0]
-
-        result = "Survived" if prediction == 1 else "Not Survived"
-
-        return render_template_string(HTML_TEMPLATE, result=result)
-
-    except Exception as e:
-        return render_template_string(HTML_TEMPLATE, result=str(e))
-
-# REST API ENDPOINT
-
+# ---------------- HOME PAGE ----------------
 @app.route("/")
 def home():
     return render_template_string(HTML_TEMPLATE)
 
 
+# ---------------- UI PREDICTION ----------------
 @app.route("/predict", methods=["GET", "POST"])
 def predict_html():
 
@@ -126,10 +89,33 @@ def predict_html():
     except Exception as e:
         return render_template_string(HTML_TEMPLATE, result=str(e))
 
+
+# ---------------- API ENDPOINT ----------------
 @app.route("/api/predict", methods=["POST"])
 def predict_api():
-    ...
 
-# RUN APP
+    try:
+        data = request.get_json()
+
+        df = pd.DataFrame([data])
+        df = pd.get_dummies(df)
+        df = df.reindex(columns=columns, fill_value=0)
+
+        df_scaled = scaler.transform(df)
+        prediction = model.predict(df_scaled)[0]
+
+        result = "Survived" if prediction == 1 else "Not Survived"
+
+        return jsonify({
+            "prediction": result
+        })
+
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        })
+
+
+# ---------------- RUN APP ----------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
