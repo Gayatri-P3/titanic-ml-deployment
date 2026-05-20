@@ -89,39 +89,41 @@ def predict_html():
 
 # REST API ENDPOINT
 
-@app.route("/predict", methods=["GET", "POST"])
-def predict_api():
+@app.route("/")
+def home():
+    return render_template_string(HTML_TEMPLATE)
 
-    # Browser GET request
+
+@app.route("/predict", methods=["GET", "POST"])
+def predict_html():
+
     if request.method == "GET":
-        return jsonify({
-            "message": "Titanic Prediction API is Running Successfully"
-        })
+        return render_template_string(HTML_TEMPLATE)
 
     try:
-        data = request.get_json()
+        data = {
+            "Pclass": int(request.form["Pclass"]),
+            "Sex": request.form["Sex"],
+            "Age": float(request.form["Age"]),
+            "SibSp": int(request.form["SibSp"]),
+            "Parch": int(request.form["Parch"]),
+            "Fare": float(request.form["Fare"]),
+            "Embarked": request.form["Embarked"]
+        }
 
         df = pd.DataFrame([data])
         df = pd.get_dummies(df)
         df = df.reindex(columns=columns, fill_value=0)
 
         df_scaled = scaler.transform(df)
-
         prediction = model.predict(df_scaled)[0]
-        probability = model.predict_proba(df_scaled)[0][prediction]
 
         result = "Survived" if prediction == 1 else "Not Survived"
 
-        return jsonify({
-            "prediction": result,
-            "confidence": round(float(probability), 4)
-        })
+        return render_template_string(HTML_TEMPLATE, result=result)
 
     except Exception as e:
-        return jsonify({
-            "error": str(e)
-        })
-
+        return render_template_string(HTML_TEMPLATE, result=str(e))
 
 # RUN APP
 if __name__ == "__main__":
