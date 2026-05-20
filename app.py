@@ -89,8 +89,14 @@ def predict_html():
 
 # REST API ENDPOINT
 
-@app.route("/api/predict", methods=["POST"])
+@app.route("/api/predict", methods=["GET", "POST"])
 def predict_api():
+
+    # Browser GET request
+    if request.method == "GET":
+        return jsonify({
+            "message": "Titanic Prediction API is Running Successfully"
+        })
 
     try:
         data = request.get_json()
@@ -115,6 +121,7 @@ def predict_api():
         return jsonify({
             "error": str(e)
         })
+
 
 # RUN APP
 if __name__ == "__main__":
