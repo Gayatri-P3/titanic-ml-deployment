@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Titanic Survival Prediction</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+        }
+
+        .container{
+            width:420px;
+            background:white;
+            padding:35px;
+            border-radius:20px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .title{
+            text-align:center;
+            margin-bottom:25px;
+        }
+
+        .title h1{
+            color:#0f172a;
+            font-size:28px;
+            margin-bottom:8px;
+        }
+
+        .title p{
+            color:gray;
+            font-size:14px;
+        }
+
+        .form-group{
+            margin-bottom:18px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:7px;
+            color:#334155;
+            font-weight:bold;
+        }
+
+        input, select{
+            width:100%;
+            padding:12px;
+            border:1px solid #cbd5e1;
+            border-radius:10px;
+            outline:none;
+            font-size:15px;
+        }
+
+        input:focus,
+        select:focus{
+            border-color:#2563eb;
+        }
+
+        .btn{
+            width:100%;
+            padding:14px;
+            background:#2563eb;
+            color:white;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+            transition:0.3s;
+            margin-top:10px;
+        }
+
+        .btn:hover{
+            background:#1d4ed8;
+        }
+
+        .result{
+            margin-top:25px;
+            text-align:center;
+            padding:15px;
+            border-radius:10px;
+            background:#f1f5f9;
+            color:#0f172a;
+            font-size:18px;
+            font-weight:bold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="title">
+            <h1>Titanic Predictor</h1>
+            <p>Predict whether a passenger survived or not</p>
+        </div>
+
+        <form action="/predict" method="POST">
+
+            <div class="form-group">
+                <label>Passenger Class</label>
+                <select name="Pclass" required>
+                    <option value="">Select Class</option>
+                    <option value="1">1st Class</option>
+                    <option value="2">2nd Class</option>
+                    <option value="3">3rd Class</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Gender</label>
+                <select name="Sex" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" step="any" name="Age" placeholder="Enter Age" required>
+            </div>
+
+            <div class="form-group">
+                <label>Siblings / Spouse</label>
+                <input type="number" name="SibSp" placeholder="Enter Number" required>
+            </div>
+
+            <div class="form-group">
+                <label>Parents / Children</label>
+                <input type="number" name="Parch" placeholder="Enter Number" required>
+            </div>
+
+            <div class="form-group">
+                <label>Fare</label>
+                <input type="number" step="any" name="Fare" placeholder="Enter Fare" required>
+            </div>
+
+            <button type="submit" class="btn">Predict Survival</button>
+
+        </form>
+
+        {% if prediction_text %}
+        <div class="result">
+            {{ prediction_text }}
+        </div>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
