@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template_string
 import pandas as pd
+import numpy as np
 import pickle
 
 app = Flask(__name__)
@@ -124,6 +125,10 @@ def predict_html():
 
     except Exception as e:
         return render_template_string(HTML_TEMPLATE, result=str(e))
+
+@app.route("/api/predict", methods=["POST"])
+def predict_api():
+    ...
 
 # RUN APP
 if __name__ == "__main__":
