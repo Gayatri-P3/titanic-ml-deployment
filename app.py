@@ -89,7 +89,7 @@ def predict_html():
 
 # REST API ENDPOINT
 
-@app.route("/api/predict", methods=["GET", "POST"])
+@app.route("/predict", methods=["GET", "POST"])
 def predict_api():
 
     # Browser GET request
