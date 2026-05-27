@@ -1,102 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Titanic Survival Prediction</title>
+    <title>Titanic Survival Predictor 🚢</title>
 
     <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
 
-        body{
-            height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
+        body {
+            font-family: Arial;
             background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            text-align: center;
+            margin: 0;
         }
 
-        .container{
-            width:420px;
-            background:white;
-            padding:35px;
-            border-radius:20px;
-            box-shadow:0 10px 25px rgba(0,0,0,0.3);
+        .card {
+            background: rgba(255,255,255,0.05);
+            width: 430px;
+            margin: auto;
+            margin-top: 40px;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
         }
 
-        .title{
-            text-align:center;
-            margin-bottom:25px;
+        h2 {
+            margin-bottom: 5px;
         }
 
-        .title h1{
-            color:#0f172a;
-            font-size:28px;
-            margin-bottom:8px;
+        .sub {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 20px;
         }
 
-        .title p{
-            color:gray;
-            font-size:14px;
+        input, select {
+            width: 92%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 14px;
         }
 
-        .form-group{
-            margin-bottom:18px;
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: #22c55e;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
         }
 
-        label{
-            display:block;
-            margin-bottom:7px;
-            color:#334155;
-            font-weight:bold;
+        button:hover {
+            background: #16a34a;
         }
 
-        input, select{
-            width:100%;
-            padding:12px;
-            border:1px solid #cbd5e1;
-            border-radius:10px;
-            outline:none;
-            font-size:15px;
+        .error {
+            color: #f87171;
+            font-size: 12px;
+            text-align: left;
+            margin-left: 10px;
+            margin-top: 3px;
         }
 
-        input:focus,
-        select:focus{
-            border-color:#2563eb;
+        .info {
+            color: #94a3b8;
+            font-size: 11px;
+            text-align: left;
+            margin-left: 10px;
         }
 
-        .btn{
-            width:100%;
-            padding:14px;
-            background:#2563eb;
-            color:white;
-            border:none;
-            border-radius:10px;
-            font-size:16px;
-            font-weight:bold;
-            cursor:pointer;
-            transition:0.3s;
-            margin-top:10px;
+        #result {
+            margin-top: 25px;
+            font-size: 20px;
+            font-weight: bold;
         }
 
-        .btn:hover{
-            background:#1d4ed8;
+        #probability {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #38bdf8;
         }
 
-        .result{
-            margin-top:25px;
-            text-align:center;
-            padding:15px;
-            border-radius:10px;
-            background:#f1f5f9;
-            color:#0f172a;
-            font-size:18px;
-            font-weight:bold;
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #22c55e;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: auto;
+            margin-top: 20px;
+            display: none;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
     </style>
@@ -104,65 +110,244 @@
 
 <body>
 
-    <div class="container">
+<div class="card">
 
-        <div class="title">
-            <h1>Titanic Predictor</h1>
-            <p>Predict whether a passenger survived or not</p>
-        </div>
+    <h2>🚢 Titanic Survival Predictor</h2>
 
-        <form action="/predict" method="POST">
-
-            <div class="form-group">
-                <label>Passenger Class</label>
-                <select name="Pclass" required>
-                    <option value="">Select Class</option>
-                    <option value="1">1st Class</option>
-                    <option value="2">2nd Class</option>
-                    <option value="3">3rd Class</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Gender</label>
-                <select name="Sex" required>
-                    <option value="">Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Age</label>
-                <input type="number" step="any" name="Age" placeholder="Enter Age" required>
-            </div>
-
-            <div class="form-group">
-                <label>Siblings / Spouse</label>
-                <input type="number" name="SibSp" placeholder="Enter Number" required>
-            </div>
-
-            <div class="form-group">
-                <label>Parents / Children</label>
-                <input type="number" name="Parch" placeholder="Enter Number" required>
-            </div>
-
-            <div class="form-group">
-                <label>Fare</label>
-                <input type="number" step="any" name="Fare" placeholder="Enter Fare" required>
-            </div>
-
-            <button type="submit" class="btn">Predict Survival</button>
-
-        </form>
-
-        {% if prediction_text %}
-        <div class="result">
-            {{ prediction_text }}
-        </div>
-        {% endif %}
-
+    <div class="sub">
+        AI-powered passenger survival prediction system
     </div>
+
+    <!-- PCLASS -->
+    <select id="pclass">
+        <option value="">Passenger Class</option>
+        <option value="1">1st Class</option>
+        <option value="2">2nd Class</option>
+        <option value="3">3rd Class</option>
+    </select>
+    <div class="info">Higher class passengers had higher survival chances</div>
+    <div class="error" id="pclassErr"></div>
+
+    <!-- AGE -->
+    <input
+        type="number"
+        id="age"
+        placeholder="Age"
+        min="0"
+        max="100"
+    >
+    <div class="info">Allowed age range: 0–100</div>
+    <div class="error" id="ageErr"></div>
+
+    <!-- FARE -->
+    <input
+        type="number"
+        id="fare"
+        placeholder="Fare"
+        min="0"
+        max="500"
+    >
+    <div class="info">Allowed fare range: 0–500</div>
+    <div class="error" id="fareErr"></div>
+
+    <!-- SIBSP -->
+    <input
+        type="number"
+        id="sibsp"
+        placeholder="Siblings / Spouse"
+        min="0"
+        max="8"
+    >
+    <div class="info">Allowed range: 0–8</div>
+    <div class="error" id="sibErr"></div>
+
+    <!-- PARCH -->
+    <input
+        type="number"
+        id="parch"
+        placeholder="Parents / Children"
+        min="0"
+        max="6"
+    >
+    <div class="info">Allowed range: 0–6</div>
+    <div class="error" id="parchErr"></div>
+
+    <!-- GENDER -->
+    <select id="gender">
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+    </select>
+    <div class="error" id="genderErr"></div>
+
+    <!-- EMBARKED -->
+    <select id="embarked">
+        <option value="">Boarding Port</option>
+        <option value="S">Southampton (S)</option>
+        <option value="C">Cherbourg (C)</option>
+        <option value="Q">Queenstown (Q)</option>
+    </select>
+
+    <div class="info">
+        S = Southampton | C = Cherbourg | Q = Queenstown
+    </div>
+
+    <div class="error" id="embErr"></div>
+
+    <!-- BUTTON -->
+    <button onclick="predict()">
+        Predict Survival 🚀
+    </button>
+
+    <!-- LOADER -->
+    <div class="loader" id="loader"></div>
+
+    <!-- RESULT -->
+    <div id="result"></div>
+
+    <!-- PROBABILITY -->
+    <div id="probability"></div>
+
+</div>
+
+<script>
+
+function predict() {
+
+    // CLEAR ERRORS
+    document.querySelectorAll(".error").forEach(
+        e => e.innerText = ""
+    );
+
+    document.getElementById("result").innerText = "";
+    document.getElementById("probability").innerText = "";
+
+    // GET VALUES
+
+    let pclass = Number(document.getElementById("pclass").value);
+    let age = Number(document.getElementById("age").value);
+    let fare = Number(document.getElementById("fare").value);
+    let sibsp = Number(document.getElementById("sibsp").value);
+    let parch = Number(document.getElementById("parch").value);
+
+    let gender = document.getElementById("gender").value;
+    let embarked = document.getElementById("embarked").value;
+
+    let valid = true;
+
+    // VALIDATIONS
+
+    if (![1,2,3].includes(pclass)) {
+        document.getElementById("pclassErr").innerText =
+            "Select valid passenger class";
+        valid = false;
+    }
+
+    if (isNaN(age) || age < 0 || age > 100) {
+        document.getElementById("ageErr").innerText =
+            "Age must be between 0 and 100";
+        valid = false;
+    }
+
+    if (isNaN(fare) || fare < 0 || fare > 500) {
+        document.getElementById("fareErr").innerText =
+            "Fare must be between 0 and 500";
+        valid = false;
+    }
+
+    if (isNaN(sibsp) || sibsp < 0 || sibsp > 8) {
+        document.getElementById("sibErr").innerText =
+            "SibSp must be between 0 and 8";
+        valid = false;
+    }
+
+    if (isNaN(parch) || parch < 0 || parch > 6) {
+        document.getElementById("parchErr").innerText =
+            "Parch must be between 0 and 6";
+        valid = false;
+    }
+
+    if (!gender) {
+        document.getElementById("genderErr").innerText =
+            "Please select gender";
+        valid = false;
+    }
+
+    if (!embarked) {
+        document.getElementById("embErr").innerText =
+            "Please select boarding port";
+        valid = false;
+    }
+
+    if (!valid) return;
+
+    // SHOW LOADER
+    document.getElementById("loader").style.display = "block";
+
+    // API CALL
+    fetch("/predict", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            Pclass: pclass,
+            age: age,
+            fare: fare,
+            sibsp: sibsp,
+            parch: parch,
+            gender: gender,
+            embarked: embarked
+
+        })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        document.getElementById("loader").style.display = "none";
+
+        if (data.error) {
+
+            document.getElementById("result").innerText =
+                data.error;
+
+            return;
+        }
+
+        document.getElementById("result").innerText =
+            data.prediction;
+
+        if (data.probability !== null) {
+
+            document.getElementById("probability").innerText =
+                "Survival Probability: " +
+                data.probability + "%";
+        }
+
+    })
+
+    .catch(error => {
+
+        document.getElementById("loader").style.display = "none";
+
+        document.getElementById("result").innerText =
+            "Server Error";
+
+        console.log(error);
+
+    });
+
+}
+
+</script>
 
 </body>
 </html>
